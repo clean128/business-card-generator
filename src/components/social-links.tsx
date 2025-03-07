@@ -1,11 +1,5 @@
 import { Icon } from "@iconify/react";
 
-interface SocialLink {
-  platform: string;
-  icon: string;
-  url: string;
-}
-
 export default function SocialLinks({
   socialLinks,
 }: {

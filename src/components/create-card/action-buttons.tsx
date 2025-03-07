@@ -1,13 +1,20 @@
 import { Button } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { useNavigate } from "react-router-dom";
 import { downloadCardImage } from "../../utils/vcard";
 
 interface ActionButtonsProps {
   isLoading: boolean;
   cardRef?: React.RefObject<HTMLDivElement>;
+  handleDownloadVCard?: () => void;
 }
 
-export function ActionButtons({ isLoading, cardRef }: ActionButtonsProps) {
+export function ActionButtons({
+  isLoading,
+  cardRef,
+  handleDownloadVCard,
+}: ActionButtonsProps) {
+  const navigate = useNavigate();
   const handleDownloadImage = () => {
     if (!cardRef?.current) return;
     downloadCardImage(cardRef);
@@ -28,6 +35,7 @@ export function ActionButtons({ isLoading, cardRef }: ActionButtonsProps) {
         <Button
           type="button"
           isLoading={isLoading}
+          onPress={handleDownloadVCard}
           startContent={<Icon icon="uil:user-square" className="w-5 h-5" />}
           className="bg-purple-600 hover:bg-purple-700 text-white rounded-lg w-full text-base"
         >
@@ -54,6 +62,7 @@ export function ActionButtons({ isLoading, cardRef }: ActionButtonsProps) {
         <Button
           type="button"
           isLoading={isLoading}
+          onPress={() => navigate("/dashboard")}
           startContent={<Icon icon="mage:dashboard" className="w-5 h-5" />}
           className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg w-full text-base"
         >

@@ -1,13 +1,13 @@
 import vCard from "vcf";
-import { BusinessCard } from "../types/card";
+import { CardFormData } from "../types/card";
 import html2canvas from "html2canvas";
 
-export function generateVCard(card: BusinessCard): string {
+export function generateVCard(card: CardFormData): string {
   const vcard = new vCard();
 
   // Add basic information
   vcard.add("fn", card.firstName + " " + card.lastName);
-  vcard.add("title", "business-card-" + card.id);
+  vcard.add("title", card.firstName + " " + card.lastName);
   vcard.add("org", card.companyName);
 
   // Add contact information
@@ -53,14 +53,16 @@ export function generateVCard(card: BusinessCard): string {
   return vcard.toString();
 }
 
-export function downloadVCard(card: BusinessCard) {
+export function downloadVCard(card: CardFormData) {
   const vcardString = generateVCard(card);
   const blob = new Blob([vcardString], { type: "text/vcard" });
   const url = URL.createObjectURL(blob);
 
   const link = document.createElement("a");
   link.href = url;
-  link.download = `${card.id.toLowerCase().replace(/\s+/g, "-")}.vcf`;
+  link.download = `${(card.firstName + " " + card.lastName)
+    .toLowerCase()
+    .replace(/\s+/g, "-")}.vcf`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

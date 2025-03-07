@@ -1,19 +1,19 @@
-import React from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useEffect, useRef } from "react";
 import {
   Button,
   Modal,
-  ModalContent,
-  ModalHeader,
   ModalBody,
+  ModalContent,
   ModalFooter,
-  useDisclosure,
+  ModalHeader,
   Tooltip,
+  useDisclosure,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { CardPreview } from "../components/card-preview";
-import { useCards } from "../hooks/use-cards";
 import { useAuth } from "../context/auth-context";
+import { useCards } from "../hooks/use-cards";
 import { downloadVCard } from "../utils/vcard";
 
 export default function ViewCardPage() {
@@ -22,10 +22,10 @@ export default function ViewCardPage() {
   const { getCard } = useCards();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { user } = useAuth();
-
   const card = getCard(id || "");
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!card) {
       navigate("/dashboard");
     }
@@ -127,7 +127,7 @@ export default function ViewCardPage() {
 
       <div className="flex justify-center">
         <div id={`card-${card.id}`}>
-          <CardPreview data={card} />
+          <CardPreview data={card} cardRef={cardRef} />
         </div>
       </div>
 

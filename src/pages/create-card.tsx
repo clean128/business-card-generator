@@ -1,10 +1,11 @@
+import { Card, CardBody } from "@heroui/react";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CardForm } from "../components/create-card/card-form";
 import { CardPreview } from "../components/card-preview";
-import { useCards } from "../hooks/use-cards";
+import { CardForm } from "../components/create-card/card-form";
 import { DEFAULT_CARD_DATA } from "../constants/global";
-import { Card, CardBody } from "@heroui/react";
+import { useCards } from "../hooks/use-cards";
+import { downloadVCard } from "../utils/vcard";
 
 export default function CreateCardPage() {
   const [formData, setFormData] = useState(DEFAULT_CARD_DATA);
@@ -22,6 +23,10 @@ export default function CreateCardPage() {
       setIsLoading(false);
       navigate(`/card/${cardId}`);
     }, 1000);
+  };
+
+  const handleDownloadVCard = () => {
+    downloadVCard(formData);
   };
 
   return (
@@ -44,6 +49,7 @@ export default function CreateCardPage() {
                 isLoading={isLoading}
                 setFormData={setFormData}
                 cardRef={cardRef}
+                handleDownloadVCard={handleDownloadVCard}
               />
             </div>
           </CardBody>

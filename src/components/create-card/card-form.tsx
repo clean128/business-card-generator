@@ -1,26 +1,14 @@
+import { Tab, Tabs, useDisclosure } from "@heroui/react";
 import React from "react";
-import {
-  Tabs,
-  Tab,
-  Button,
-  useDisclosure,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "@heroui/react";
-import { Icon } from "@iconify/react";
-import { CardFormData } from "../../types/card";
-import Profile from "./profile/profile";
-import Business from "./business/business";
-import Social from "./social/social";
-import About from "./about/about";
-import CTA from "./cta/cta";
-import Tesseract from "tesseract.js";
-import { UploadModal } from "./upload-modal";
-import { ActionButtons } from "./action-buttons";
 import { useBusinessCardExtractor } from "../../hooks/use-business-card-extractor";
+import { CardFormData } from "../../types/card";
+import About from "./about/about";
+import { ActionButtons } from "./action-buttons";
+import Business from "./business/business";
+import CTA from "./cta/cta";
+import Profile from "./profile/profile";
+import Social from "./social/social";
+import { UploadModal } from "./upload-modal";
 
 interface CardFormProps {
   formData: CardFormData;
@@ -28,6 +16,7 @@ interface CardFormProps {
   onSubmit: (data: CardFormData) => void;
   isLoading?: boolean;
   cardRef?: React.RefObject<HTMLDivElement>;
+  handleDownloadVCard?: () => void;
 }
 
 export function CardForm({
@@ -36,6 +25,7 @@ export function CardForm({
   isLoading = false,
   setFormData,
   cardRef,
+  handleDownloadVCard,
 }: CardFormProps) {
   const [activeTab, setActiveTab] = React.useState("profile");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -64,7 +54,6 @@ export function CardForm({
 
   async function handleImageUpload(file: File) {
     const cardData = await extractBusinessCard(file);
-    console.log(cardData);
 
     // Update your form data with the extracted information
     setFormData((prev) => ({
@@ -138,7 +127,11 @@ export function CardForm({
         </Tab>
       </Tabs>
 
-      <ActionButtons isLoading={isLoading} cardRef={cardRef} />
+      <ActionButtons
+        isLoading={isLoading}
+        cardRef={cardRef}
+        handleDownloadVCard={handleDownloadVCard}
+      />
 
       <UploadModal
         isOpen={isOpen}
