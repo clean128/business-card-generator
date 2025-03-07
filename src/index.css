@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+    --bgColor: #4299e1;
+    --textColor: #4299e11f;
+}
+
+.theme-redPrimary {
+    --bgColor: #f56565;
+    --textColor: #f565651f;
+}
+
+.theme-bluePrimary {
+    --bgColor: #6e51f0;
+    --textColor: #1a16e6;
+}
+
+.theme-orange {
+    --bgColor: #ed8936;
+    --textColor: #ed89361f;
+}
+
+.theme-yellow {
+    --bgColor: #ecc94b;
+    --textColor: #ecc94b1f;
+}
+
+.theme-brown {
+    --bgColor: #9c6644;
+    --textColor: #9c66441f;
+}
+
+.theme-green {
+    --bgColor: #48bb78;
+    --textColor: #48bb781f;
+}
+
+.theme-teal {
+    --bgColor: #38b2ac;
+    --textColor: #38b2ac1f;
+}
+
+.theme-blueSecondary {
+    --bgColor: #3182ce;
+    --textColor: #3182ce1f;
+}
+
+.theme-indigo {
+    --bgColor: #6b46c1;
+    --textColor: #6b46c11f;
+}
+
+.theme-pink {
+    --bgColor: #d53f8c;
+    --textColor: #d53f8c1f;
+}
+
+.theme-redSecondary {
+    --bgColor: #e53e3e;
+    --textColor: #e53e3e1f;
+}
+
+.theme-grayPrimary {
+    --bgColor: #2d3748;
+    --textColor: #2d37481f;
+}
+
+.theme-graySecondary {
+    --bgColor: #718096;
+    --textColor: #7180961f;
+}

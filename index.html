@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image" href="/vite.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Business Card Generator</title>
+  </head>
+  <body class="h-full min-h-screen">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Create an array to store multiple errors
+      let errorBuffer = [];
+      const originalConsoleError = console.error;
+
+      function formatError(error) {
+        if (error instanceof Error) {
+          return {
+            type: "Error",
+            message: error.message,
+            stack: error.stack,
+            name: error.name,
+          };
+        }
+        if (typeof error === "object") {
+          return JSON.stringify(error);
+        }
+        return error;
+      }
+
+      console.error = function (...args) {
+        // Format the error message
+        const formattedError = args.map(formatError);
+        // Add to error buffer
+        errorBuffer.push(formattedError);
+        // Send all accumulated errors to parent
+        window.parent.postMessage(
+          {
+            type: "CONSOLE_ERROR",
+            message: errorBuffer.map((errors) =>
+              errors.map((err) => (typeof err === "object" ? JSON.stringify(err) : err)),
+            ),
+          },
+          "*",
+        );
+        originalConsoleError.apply(console, args);
+      };
+
+      // Also capture unhandled errors and rejections
+      window.addEventListener("error", function (event) {
+        console.error(formatError(event.error));
+        window.parent.postMessage(
+          {
+            type: "UNHANDLED_ERROR",
+            message: formatError(event.error),
+          },
+          "*",
+        );
+      });
+
+      window.addEventListener("unhandledrejection", function (event) {
+        console.error(formatError(event.reason));
+        window.parent.postMessage(
+          {
+            type: "UNHANDLED_REJECTION",
+            message: formatError(event.reason),
+          },
+          "*",
+        );
+      });
+
+      // Debounce the mutation observer callback
+      let debounceTimeout;
+      const observer = new MutationObserver((mutations) => {
+        if (debounceTimeout) clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+          const root = document.getElementById("root");
+          const isMounted = root && root.children.length > 0;
+          window.parent.postMessage(
+            {
+              type: "ROOT_MOUNT_STATUS",
+              isMounted,
+              content: root ? root.innerHTML : null,
+            },
+            "*",
+          );
+        }, 300);
+      });
+
+      observer.observe(document.getElementById("root"), {
+        childList: true,
+        subtree: true,
+      });
+
+      // Add message event listener for history navigation
+      window.addEventListener("message", (event) => {
+        try {
+          switch (event.data.type) {
+            case "HISTORY_BACK":
+              if (window.history.length > 1) {
+                window.history.back();
+              }
+              break;
+            case "HISTORY_FORWARD":
+              if (window.history.length > 1) {
+                window.history.forward();
+              }
+              break;
+          }
+        } catch (error) {
+          console.error("Navigation error:", error);
+        }
+      });
+    </script>
+  </body>
+</html>
