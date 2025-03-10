@@ -8,7 +8,7 @@ import {
   Button,
   Divider,
 } from "@heroui/react";
-import { signIn } from "../services/auth";
+import { useAuth } from "../context/auth-context";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -16,9 +16,15 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { signIn } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!email || !password) {
+      setError("Please fill in all fields");
+      return;
+    }
     setError("");
     setIsLoading(true);
 

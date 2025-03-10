@@ -1,9 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { User, AuthContextType } from "../types/auth";
 import { useLocalStorage } from "../hooks/use-local-storage";
 import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
+import { addToast } from "@heroui/react";
 
-const AuthContext = React.createContext<AuthContextType>({
+const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   signIn: async () => {},
@@ -22,12 +24,6 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useLocalStorage<User | null>("auth-user", null);
   const [loading, setLoading] = useState(true);
-  const [users, setUsers] = useLocalStorage<
-    Record<
-      string,
-      { email: string; password: string; name: string; id: string }
-    >
-  >("users", {});
 
   useEffect(() => {
     // Simulate loading auth state
@@ -40,66 +36,116 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const signIn = async (email: string, password: string) => {
     setLoading(true);
+    try {
+      const response = await axios.post("http://localhost:5000/signin", {
+        email,
+        password,
+      });
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      const loggedInUser: User = {
+        id: response.data.id,
+        email: response.data.email,
+        name: response.data.name,
+        token: response.data.token,
+      };
 
-    const userRecord = Object.values(users).find((u) => u.email === email);
+      addToast({
+        title: "Login successful",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+        color: "success",
+        radius: "sm",
+      });
 
-    if (!userRecord || userRecord.password !== password) {
+      setUser(loggedInUser);
+    } catch (error: any) {
+      // Handle API errors
+      addToast({
+        title: error.response.data.message || "Something went wrong",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+        color: "danger",
+        radius: "sm",
+      });
+      throw error;
+    } finally {
       setLoading(false);
-      throw new Error("Invalid email or password");
     }
-
-    const loggedInUser: User = {
-      id: userRecord.id,
-      email: userRecord.email,
-      name: userRecord.name,
-    };
-
-    setUser(loggedInUser);
-    setLoading(false);
   };
 
   const signUp = async (email: string, password: string, name: string) => {
     setLoading(true);
+    try {
+      const response = await axios.post("http://localhost:5000/signup", {
+        username: name,
+        email,
+        password,
+      });
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("Response:", response.data);
 
-    const existingUser = Object.values(users).find((u) => u.email === email);
+      const loggedInUser: User = {
+        id: response.data.id,
+        email,
+        name,
+        token: response.data.token,
+      };
 
-    if (existingUser) {
+      addToast({
+        title: "Signup successful",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+        color: "success",
+        radius: "sm",
+      });
+
+      setUser(loggedInUser);
+    } catch (error: any) {
+      // Handle API errors
+      addToast({
+        title: error.response.data.message || "Something went wrong",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+        color: "danger",
+        radius: "sm",
+      });
+
+      console.error("Sign in error:", error);
+      throw error;
+    } finally {
       setLoading(false);
-      throw new Error("Email already in use");
     }
-
-    const userId = uuidv4();
-    const newUser = { id: userId, email, password, name };
-
-    setUsers((prev) => ({
-      ...prev,
-      [userId]: newUser,
-    }));
-
-    const loggedInUser: User = {
-      id: userId,
-      email,
-      name,
-    };
-
-    setUser(loggedInUser);
-    setLoading(false);
   };
 
   const signOut = async () => {
     setLoading(true);
+    try {
+      await axios.delete("http://localhost:5000/signout");
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 500));
+      addToast({
+        title: "Signout successful",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+        color: "success",
+        radius: "sm",
+      });
 
-    setUser(null);
-    setLoading(false);
+      setUser(null);
+    } catch (error: any) {
+      // Handle API errors
+      console.error("Sign in error:", error);
+
+      addToast({
+        title: error.response.data.message || "Something went wrong",
+        timeout: 3000,
+        shouldShowTimeoutProgress: true,
+        color: "danger",
+        radius: "sm",
+      });
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const value = {
