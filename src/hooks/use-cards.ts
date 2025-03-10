@@ -4,7 +4,10 @@ import { BusinessCard, CardFormData } from "../types/card";
 import { useAuth } from "../context/auth-context";
 
 export function useCards() {
-  const [cards, setCards] = useLocalStorage<BusinessCard[]>("business-cards", []);
+  const [cards, setCards] = useLocalStorage<BusinessCard[]>(
+    "business-cards",
+    []
+  );
   const { user } = useAuth();
 
   const addCard = (cardData: CardFormData) => {
@@ -13,9 +16,9 @@ export function useCards() {
       id: uuidv4(),
       userId: user?.id || null,
       createdAt: Date.now(),
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
     };
-    
+
     setCards((prevCards) => [...prevCards, newCard]);
     return newCard.id;
   };
@@ -23,9 +26,7 @@ export function useCards() {
   const updateCard = (id: string, cardData: Partial<CardFormData>) => {
     setCards((prevCards) =>
       prevCards.map((card) =>
-        card.id === id
-          ? { ...card, ...cardData, updatedAt: Date.now() }
-          : card
+        card.id === id ? { ...card, ...cardData, updatedAt: Date.now() } : card
       )
     );
   };
@@ -54,6 +55,6 @@ export function useCards() {
     updateCard,
     deleteCard,
     getCard,
-    getPublicCards
+    getPublicCards,
   };
 }

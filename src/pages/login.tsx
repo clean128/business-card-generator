@@ -1,22 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Card, CardHeader, CardBody, CardFooter, Input, Button, Divider } from "@heroui/react";
-import { Icon } from "@iconify/react";
-import { useAuth } from "../context/auth-context";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Input,
+  Button,
+  Divider,
+} from "@heroui/react";
+import { signIn } from "../services/auth";
 
 export default function LoginPage() {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [error, setError] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(false);
-  const { signIn } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-    
+
     try {
       await signIn(email, password);
       navigate("/");
@@ -33,7 +38,9 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="flex flex-col gap-1">
           <h1 className="text-2xl font-bold">Log In</h1>
-          <p className="text-default-500 text-sm">Welcome back! Log in to your account</p>
+          <p className="text-default-500 text-sm">
+            Welcome back! Log in to your account
+          </p>
         </CardHeader>
         <CardBody>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -42,7 +49,7 @@ export default function LoginPage() {
                 {error}
               </div>
             )}
-            
+
             <Input
               label="Email"
               type="email"
@@ -51,7 +58,7 @@ export default function LoginPage() {
               placeholder="Enter your email"
               isRequired
             />
-            
+
             <Input
               label="Password"
               type="password"
@@ -60,19 +67,19 @@ export default function LoginPage() {
               placeholder="Enter your password"
               isRequired
             />
-            
-            <Button 
-              type="submit" 
-              color="primary" 
+
+            <Button
+              type="submit"
+              color="primary"
               className="w-full"
               isLoading={isLoading}
             >
               Log In
             </Button>
           </form>
-          
+
           <Divider className="my-4" />
-          
+
           <div className="text-center">
             <p className="text-sm text-default-500">
               Don't have an account?{" "}

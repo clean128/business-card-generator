@@ -12,6 +12,7 @@
   "dependencies": {
     "@heroui/react": "2.7.4",
     "@iconify/react": "latest",
+    "axios": "^1.8.2",
     "clsx": "^2.1.1",
     "firebase": "^10.8.0",
     "html2canvas": "^1.4.1",

@@ -1,16 +1,15 @@
-import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { 
-  Navbar, 
-  NavbarBrand, 
-  NavbarContent, 
-  NavbarItem, 
-  Button, 
-  Dropdown, 
-  DropdownTrigger, 
-  DropdownMenu, 
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Button,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
   DropdownItem,
-  Avatar
+  Avatar,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useAuth } from "../context/auth-context";
@@ -18,7 +17,7 @@ import { useAuth } from "../context/auth-context";
 export function AppNavbar() {
   const location = useLocation();
   const { user, signOut } = useAuth();
-  
+
   return (
     <Navbar>
       <NavbarBrand>
@@ -27,16 +26,20 @@ export function AppNavbar() {
           <span>CardGen</span>
         </Link>
       </NavbarBrand>
-      
+
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem isActive={location.pathname === "/"}>
-          <Link to="/" className="text-inherit">Create Card</Link>
+          <Link to="/" className="text-inherit">
+            Create Card
+          </Link>
         </NavbarItem>
         <NavbarItem isActive={location.pathname === "/dashboard"}>
-          <Link to="/dashboard" className="text-inherit">Dashboard</Link>
+          <Link to="/dashboard" className="text-inherit">
+            Dashboard
+          </Link>
         </NavbarItem>
       </NavbarContent>
-      
+
       <NavbarContent justify="end">
         {user ? (
           <Dropdown>
@@ -53,10 +56,10 @@ export function AppNavbar() {
                 <p className="font-semibold">Signed in as</p>
                 <p className="font-semibold">{user.email}</p>
               </DropdownItem>
-              <DropdownItem key="dashboard" as={Link} to="/dashboard">
+              <DropdownItem key="dashboard" as={Link} href="/dashboard">
                 Dashboard
               </DropdownItem>
-              <DropdownItem key="create" as={Link} to="/">
+              <DropdownItem key="create" as={Link} href="/">
                 Create Card
               </DropdownItem>
               <DropdownItem key="logout" color="danger" onPress={signOut}>
@@ -66,18 +69,10 @@ export function AppNavbar() {
           </Dropdown>
         ) : (
           <div className="flex gap-2">
-            <Button 
-              as={Link}
-              to="/login"
-              variant="flat"
-            >
+            <Button as={Link} to="/login" variant="flat">
               Log In
             </Button>
-            <Button 
-              as={Link}
-              to="/signup"
-              color="primary"
-            >
+            <Button as={Link} to="/signup" color="primary">
               Sign Up
             </Button>
           </div>
