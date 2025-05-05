@@ -1,11 +1,13 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, CardBody } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { CardPreview } from "../components/card-preview";
 import { DEFAULT_CARD_DATA } from "../constants/global";
+import { useRef } from "react";
 
 export default function HomePage() {
+  const cardRef = useRef<HTMLDivElement>(null);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row gap-8 items-center">
@@ -104,7 +106,7 @@ export default function HomePage() {
         </div>
 
         <div className="flex-1 w-full max-w-md">
-          <CardPreview data={DEFAULT_CARD_DATA} />
+          <CardPreview data={DEFAULT_CARD_DATA} cardRef={cardRef} />
         </div>
       </div>
     </div>

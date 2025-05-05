@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { User, AuthContextType } from "../types/auth";
 import { useLocalStorage } from "../hooks/use-local-storage";
-import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { addToast } from "@heroui/react";
 

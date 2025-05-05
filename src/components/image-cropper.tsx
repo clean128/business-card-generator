@@ -113,7 +113,7 @@ export function ImageCropper({
                 <Slider
                   aria-label="Zoom"
                   value={zoom}
-                  onChange={setZoom}
+                  onChange={(value) => setZoom(value as number)}
                   step={0.1}
                   maxValue={5}
                   minValue={1}
